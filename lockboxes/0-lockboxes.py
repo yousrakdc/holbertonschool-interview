@@ -1,26 +1,23 @@
 #!/usr/bin/python3
 
-"""
-    Determines if all boxes can be opened using DFS approach.
-    
-    Args:
-        boxes: List of lists where each inner list contains keys for other boxes
-    
-    Returns:
-        bool: True if all boxes can be opened, False otherwise
-"""
-    
 def canUnlockAll(boxes):
-    if not boxes : 
+    """
+    Determines if all boxes can be unlocked using an iterative approach.
+    Uses a stack to explore boxes without recursion limits.
+    """
+    if not boxes:
         return True
 
     n = len(boxes)
     unlocked = set([0])
+    to_explore = [0]
 
-    def look(box_num):
+    while to_explore:
+        box_num = to_explore.pop()
+        
         for key in boxes[box_num]:
             if key < n and key not in unlocked:
                 unlocked.add(key)
-                look(key)
-    look(0)
+                to_explore.append(key)
+    
     return len(unlocked) == n
