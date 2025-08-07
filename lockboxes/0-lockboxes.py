@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 
+''' 
+Determines if all boxes can be unlocked using an iterative approach.
+Uses a stack to explore boxes without recursion limits.
+'''
+
 def canUnlockAll(boxes):
-    """
-    Determines if all boxes can be unlocked using an iterative approach.
-    Uses a stack to explore boxes without recursion limits.
-    """
     if not boxes:
         return True
 
