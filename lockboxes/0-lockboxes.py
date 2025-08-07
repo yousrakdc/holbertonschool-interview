@@ -11,20 +11,16 @@
 """
     
 def canUnlockAll(boxes):
-    if not boxes:
+    if not boxes : 
         return True
 
     n = len(boxes)
     unlocked = set([0])
-    to_visit = [0]
 
-    while to_visit:
-        print(f"Current box: {to_visit[-1]}, Unlocked boxes: {unlocked}")
-        current_box = to_visit.pop()
-        
-        for key in boxes[current_box]:
+    def look(box_num):
+        for key in boxes[box_num]:
             if key < n and key not in unlocked:
                 unlocked.add(key)
-                to_visit.append(key)
-    
+                look(key)
+    look(0)
     return len(unlocked) == n
