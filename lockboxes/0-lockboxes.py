@@ -5,6 +5,7 @@ Determines if all boxes can be unlocked using an iterative approach.
 Uses a stack to explore boxes without recursion limits.
 '''
 
+
 def canUnlockAll(boxes):
 
     if not boxes:
