@@ -15,7 +15,7 @@ def canUnlockAll(boxes):
         return True
 
     n = len(boxes)
-    unlocked = set[0]
+    unlocked = set([0])
 
     def look(box_num):
         for key in boxes[box_num]:
