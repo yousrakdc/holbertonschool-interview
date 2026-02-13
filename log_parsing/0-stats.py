@@ -1,50 +1,66 @@
 #!/usr/bin/python3
-"""Script that reads stdin line by line and computes metrics."""
-
+"""
+Reads stdin line by line and computes metrics
+"""
+import re
 import sys
 
 
-def print_stats(total_size, status_counts):
-    """Print accumulated statistics."""
-    print("File size: {}".format(total_size))
-    for code in sorted(status_counts.keys()):
-        if status_counts[code] > 0:
-            print("{}: {}".format(code, status_counts[code]))
+def print_stats():
+    print(f"File size: {total_size}")
+    for key, value in status_code.items():
+        if value > 0:
+            print(f"{key}: {value}")
 
 
 if __name__ == "__main__":
+    # Start line counter
+    line_number = 0
+
+    # status code list
+    status_code = {
+        200: 0,
+        301: 0,
+        400: 0,
+        401: 0,
+        403: 0,
+        404: 0,
+        405: 0,
+        500: 0
+        }
+
+    # Initiate file size sum - for each correctly formatted line,
+    #  add file size to total_size
     total_size = 0
-    line_count = 0
-    valid_codes = {200, 301, 400, 401, 403, 404, 405, 500}
-    status_counts = {}
 
     try:
         for line in sys.stdin:
-            try:
-                line = line.strip()
-                parts = line.split()
-                if len(parts) < 2:
-                    raise ValueError
+            line_number += 1
 
-                file_size = int(parts[-1])
-                status_code = int(parts[-2])
+            # Check input line format with regex
+            pattern = r'.*?(\S+) (\S+)$'
+            match = re.search(pattern, line)
+            if match:
+                try:
+                    line_status_code = int(match.group(1))
+                except ValueError:
+                    line_status_code = None
+                try:
+                    line_size = int(match.group(2))
+                except ValueError:
+                    line_size = None
+                # If status code exist in status_code keys,
+                # increment status_code corresponding key
+                if line_status_code in status_code:
+                    status_code[line_status_code] += 1
+                total_size += line_size
 
-                if '"GET /projects/260 HTTP/1.1"' not in line:
-                    raise ValueError
-
-                total_size += file_size
-                if status_code in valid_codes:
-                    status_counts[status_code] = \
-                        status_counts.get(status_code, 0) + 1
-
-            except (ValueError, IndexError):
-                pass
-
-            line_count += 1
-            if line_count % 10 == 0:
-                print_stats(total_size, status_counts)
-
+            # If Ctrl + c is pressed or if line_number % 10 == 0
+            # print the total file size and number of line by
+            # status code in ascending order
+            if line_number % 10 == 0:
+                print_stats()
     except KeyboardInterrupt:
         pass
     finally:
-        print_stats(total_size, status_counts)
+        print_stats()
