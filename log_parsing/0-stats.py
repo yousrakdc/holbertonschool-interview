@@ -21,16 +21,15 @@ if __name__ == "__main__":
     try:
         for line in sys.stdin:
             try:
+                line = line.strip()
                 parts = line.split()
-                if len(parts) < 7:
+                if len(parts) < 2:
                     raise ValueError
 
                 file_size = int(parts[-1])
                 status_code = int(parts[-2])
 
-                if (parts[-3] != 'HTTP/1.1"'
-                        or parts[-4] != '/projects/260'
-                        or parts[-5] != '"GET'):
+                if '"GET /projects/260 HTTP/1.1"' not in line:
                     raise ValueError
 
                 total_size += file_size
@@ -49,4 +48,3 @@ if __name__ == "__main__":
         pass
     finally:
         print_stats(total_size, status_counts)
-        
