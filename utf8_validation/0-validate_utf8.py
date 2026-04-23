@@ -1,45 +1,48 @@
 #!/usr/bin/python3
 
 """
-0-validate_utf8.py - Contains the validate_utf8 function
+Module that validates UTF-8 encoding
 """
 
-def validate_utf8(data):
+
+def validUTF8(data):
     """
-    Validates if a list of integers represents a valid UTF-8 encoding.
+    Determines if a given data set represents a valid UTF-8 encoding.
 
     Args:
-        data (list): A list of integers representing bytes.
+        data: list of integers, each representing 1 byte
 
     Returns:
-        bool: True if the data is a valid UTF-8 encoding, False otherwise.
+        True if valid UTF-8, False otherwise
     """
-    # Number of bytes in the current UTF-8 character
-    num_bytes = 0
+    remaining_bytes = 0
 
     for byte in data:
-        # Check if this is the start of a new UTF-8 character
-        if num_bytes == 0:
-            # Count the number of leading 1s in the byte
-            mask = 1 << 7
-            while mask & byte:
-                num_bytes += 1
-                mask >>= 1
+        # Only keep the 8 least significant bits
+        byte = byte & 0xFF
 
-            # If no leading 1s, it's a single-byte character
-            if num_bytes == 0:
-                continue
-
-            # If there are more than 4 leading 1s, it's an invalid UTF-8 character
-            if num_bytes > 4:
+        if remaining_bytes == 0:
+            # Determine how many bytes this character uses
+            if (byte >> 7) == 0b0:
+                # 1-byte character (0xxxxxxx)
+                remaining_bytes = 0
+            elif (byte >> 5) == 0b110:
+                # 2-byte character (110xxxxx)
+                remaining_bytes = 1
+            elif (byte >> 4) == 0b1110:
+                # 3-byte character (1110xxxx)
+                remaining_bytes = 2
+            elif (byte >> 3) == 0b11110:
+                # 4-byte character (11110xxx)
+                remaining_bytes = 3
+            else:
+                # Invalid leading byte
                 return False
-
         else:
-            # Check if this is a continuation byte (starts with '10')
-            if not (byte & (1 << 7) and not (byte & (1 << 6))):
+            # Expecting a continuation byte (10xxxxxx)
+            if (byte >> 6) != 0b10:
                 return False
+            remaining_bytes -= 1
 
-        num_bytes -= 1
-
-    # If we have any remaining bytes, it's an incomplete UTF-8 character
-    return num_bytes == 0
+    # All characters must be complete
+    return remaining_bytes == 0
