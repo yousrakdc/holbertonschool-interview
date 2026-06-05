@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "0-slide_line.h"
+#include "slide_line.h"
 
-#define LINE_SIZE    32
+#define LINE_SIZE   32
 
 /**
  * print_array - Prints out an array of integer, followed by a new line
