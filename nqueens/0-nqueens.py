@@ -3,7 +3,7 @@
 
 Solves the N queens problem using backtracking and prints every
 possible solution, one per line, in the form of a list of
-[row, column] pairs.
+[row, column] pairs
 """
 import sys
 
