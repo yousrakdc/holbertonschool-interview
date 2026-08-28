@@ -5,7 +5,7 @@ const request = require('request');
 const movieId = process.argv[2];
 const BASE_URL = 'https://swapi.dev/api/films/';
 
-function printCharacter(characters, index) {
+function printCharacter (characters, index) {
   if (index >= characters.length) {
     return;
   }
