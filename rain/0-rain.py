@@ -3,17 +3,18 @@
 """Module that calculates how much rainwater is retained between walls
 """
 
+
 def rain(walls):
     if not walls:
         return 0
-    
-    
+
     left = 0
     right = len(walls) - 1
     left_max = 0
     right_max = 0
     water = 0
-    
+
+
     while left < right:
         if walls[left] < walls[right]:
             if walls[left] >= left_max:
